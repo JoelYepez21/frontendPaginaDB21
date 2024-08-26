@@ -11,7 +11,7 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import logo from "../images/logo.png";
+import logo from "../../../images/logo.png";
 import { CloseIcon } from "@chakra-ui/icons";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
@@ -20,7 +20,7 @@ export const FormIcon = () => {
   const fileInputRef = useRef();
   const [imagenUser, setImagenUser] = useState(null);
   const toast = useToast();
-  const rutaMain = "http://localhost:3003/api/imagenPerfil/";
+  const rutaMain = "/api/imagenPerfil/";
 
   const handleImagen = async (imagen) => {
     const image = { imagen };

@@ -8,14 +8,14 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-import ModalCrearMetodo from "./ModalCrearMetodo";
+import ModalCrearMetodo from "../modales/superUser/ModalCrearMetodo";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import AlertDialogueDelete from "./AlertDeleteUser";
 import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import { FiEdit3 } from "react-icons/fi";
 import PopoverForm from "./BtnEditarMetodo";
-
+// vista de pagos para el admi
 export const VistaPagosSuperUser = () => {
   const [metodos, setMetodos] = React.useState([]);
   const [pagos, setPagos] = React.useState([]);
@@ -26,7 +26,7 @@ export const VistaPagosSuperUser = () => {
     !pagosBase && !metodos ? false : true
   );
   const toast = useToast();
-
+  // funcion para obtener los metodos de pago
   const handleGetMetodos = async () => {
     const { data } = await axios.get("/api/metodos/a");
     setMetodos(data);
@@ -35,7 +35,7 @@ export const VistaPagosSuperUser = () => {
   useEffect(() => {
     handleGetMetodos();
   }, [setMetodos]);
-
+  // funcion para obtener los pagos
   const handleGetPago = async () => {
     const { data } = await axios.get("/api/pagos");
     setPagosBase(
@@ -57,45 +57,25 @@ export const VistaPagosSuperUser = () => {
   useEffect(() => {
     handleGetPago();
   }, [setPagosBase]);
-
+  // funcion para filtrar los pagos
   useEffect(() => {
     const handleFiltro = async () => {
       if (estado === "" && typeMetodo === "") {
         return setPagos(pagosBase);
-      } else if (estado === "true" && typeMetodo === "") {
-        return setPagos(pagosBase.filter((pago) => pago.confirmado));
-      } else if (estado === "" && typeMetodo === "digital") {
+      } else if (estado !== "" && typeMetodo === "") {
+        return setPagos(
+          pagosBase.filter((pago) => pago.confirmado.toString() === estado)
+        );
+      } else if (estado === "" && typeMetodo !== "") {
         return setPagos(
           pagosBase.filter((pago) => pago.metodo.typeMetodo === typeMetodo)
         );
-      } else if (estado === "" && typeMetodo === "fisico") {
-        return setPagos(
-          pagosBase.filter((pago) => pago.metodo.typeMetodo === typeMetodo)
-        );
-      } else if (estado === "false" && typeMetodo === "") {
-        return setPagos(pagosBase.filter((pago) => !pago.confirmado));
-      } else if (estado === "true" && typeMetodo === "digital") {
+      } else if (estado !== "" && typeMetodo !== "") {
         return setPagos(
           pagosBase.filter(
-            (pago) => pago.confirmado && pago.metodo.typeMetodo === typeMetodo
-          )
-        );
-      } else if (estado === "true" && typeMetodo === "fisico") {
-        return setPagos(
-          pagosBase.filter(
-            (pago) => pago.confirmado && pago.metodo.typeMetodo === typeMetodo
-          )
-        );
-      } else if (estado === "false" && typeMetodo === "digital") {
-        return setPagos(
-          pagosBase.filter(
-            (pago) => !pago.confirmado && pago.metodo.typeMetodo === typeMetodo
-          )
-        );
-      } else if (estado === "false" && typeMetodo === "fisico") {
-        return setPagos(
-          pagosBase.filter(
-            (pago) => !pago.confirmado && pago.metodo.typeMetodo === typeMetodo
+            (pago) =>
+              pago.confirmado.toString() === estado &&
+              pago.metodo.typeMetodo === typeMetodo
           )
         );
       }
@@ -103,7 +83,7 @@ export const VistaPagosSuperUser = () => {
 
     handleFiltro();
   }, [estado, pagosBase, typeMetodo]);
-
+  // funcion para eliminar los metodos de pago
   const handleDeleteMetodo = async (metodoEsperado) => {
     try {
       await axios.delete(`/api/metodos/${metodoEsperado.id}`);
@@ -120,8 +100,8 @@ export const VistaPagosSuperUser = () => {
       console.log(error);
     }
   };
+  // funcion para eliminar los pagos
   const handleDeletePago = async (pagoEsperado) => {
-    // setPagos(pagos.filter((pago) => pago.id != pagoEsperado.id));
     await axios.delete(
       `/api/pagos/${pagoEsperado.id}/${pagoEsperado.user.email}`
     );
@@ -135,6 +115,7 @@ export const VistaPagosSuperUser = () => {
     });
     handleGetPago();
   };
+  // funcion para confirmar los pagos
   const handleConfirPago = async (pagoEsperado) => {
     await axios.patch(`/api/pagos/${pagoEsperado.id}`, {
       confirmado: true,
@@ -150,6 +131,7 @@ export const VistaPagosSuperUser = () => {
     });
     handleGetPago();
   };
+  // funcion para desconfirmar los pagos
   const handleDesconfirPago = async (pagoEsperado) => {
     await axios.patch(`/api/pagos/${pagoEsperado.id}`, {
       confirmado: false,
@@ -169,8 +151,6 @@ export const VistaPagosSuperUser = () => {
     <Flex direction="column" gap="4">
       <ModalCrearMetodo
         title="Crear metodo de pago"
-        // metodos={metodos}
-        // setMetodos={setMetodos}
         handleGetMetodos={handleGetMetodos}
       />
       {isLoading ? (
@@ -202,7 +182,6 @@ export const VistaPagosSuperUser = () => {
                   alignItems="center"
                   justifyContent="space-around"
                 >
-                  {/* <ModalEditMetodo metodoPasado={metodo}></ModalEditMetodo> */}
                   <PopoverForm
                     metodo={metodo}
                     getMetodos={handleGetMetodos}
@@ -240,8 +219,8 @@ export const VistaPagosSuperUser = () => {
                 mb={4}
               >
                 <option value="">Filtrar por confirmacion</option>
-                <option value={"true"}>Confirmado</option>
-                <option value={"false"}>Por confirmar</option>
+                <option value={true}>Confirmado</option>
+                <option value={false}>Por confirmar</option>
               </Select>
               <Select
                 border="solid 1px"
@@ -329,7 +308,6 @@ export const VistaPagosSuperUser = () => {
                             {pago.metodo.typeMetodo === "digital"
                               ? pago.monto + "bs"
                               : pago.monto + "$"}
-                            {/* {pago.monto} */}
                           </Text>
                           <Text fontSize="2xl" textAlign="center">
                             {pago.fecha}

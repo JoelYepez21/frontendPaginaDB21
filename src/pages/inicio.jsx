@@ -1,8 +1,8 @@
 import { Flex } from "@chakra-ui/react";
-import SidebarWithHeader from "../components/NavBarSesion";
+import SidebarWithHeader from "../components/navbars/NavBarSesion";
 import { useAuth } from "../hooks/useAuth";
-import FormSesion from "../components/FromSesion";
-import VistaHomeSuperUser from "../components/VistaHomeSuperUser";
+import FormSesion from "../components//FromSesion";
+import VistaHomeSuperUser from "../components/componentesSuperUser/VistaHomeSuperUser";
 
 const Inicio = () => {
   const { auth } = useAuth();

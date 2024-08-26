@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 
-import FromCrearMetodo from "./FromCrearMetodo";
+import FromCrearMetodo from "./formularios/formulariosPagos/SuperUser/FromCrearMetodo";
 
 export const ModalEditMetodo = ({ title, metodoPasado }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();

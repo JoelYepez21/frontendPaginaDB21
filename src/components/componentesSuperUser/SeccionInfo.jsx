@@ -5,7 +5,7 @@ import {
   Flex,
   Text,
 } from "@chakra-ui/react";
-
+// componente para mostrar informacion en el inicio al admi
 export const SeccionInfo = ({
   array,
   arrayFiltrado,
@@ -35,7 +35,6 @@ export const SeccionInfo = ({
             {arrayFiltrado === 0 ? description : arrayFiltrado + description}
           </Text>
         </Box>
-        {/* <SunIcon boxSize="4rem"></SunIcon> */}
         <CircularProgress
           value={calcularPorcentaje()}
           size="4rem"

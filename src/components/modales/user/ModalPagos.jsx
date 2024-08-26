@@ -10,7 +10,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
-import FromPagoMovil from "./FromPagoMovil";
+import FromPagoMovil from "../../formularios/formulariosPagos/User/FromPagoMovil";
 import axios from "axios";
 // import FromPagoEfectivo from "./FromPagoEfectivo";
 

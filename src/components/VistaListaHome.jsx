@@ -11,7 +11,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-import AlertDialogueDelete from "./AlertDeleteUser";
+import AlertDialogueDelete from "./componentesSuperUser/AlertDeleteUser";
 import axios from "axios";
 import { FiTrash2 } from "react-icons/fi";
 

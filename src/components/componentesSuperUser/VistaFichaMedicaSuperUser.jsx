@@ -13,7 +13,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
 import AlertDialogueDelete from "./AlertDeleteUser";
 import { ViewIcon } from "@chakra-ui/icons";
-
+// vista de las fichas medicas para el admi
 export const VistaFichaMedicaSuperUser = () => {
   const [pdfSuperUser, setPdfSuperUser] = React.useState([]);
   const [pdfUsers, setPdfUsers] = React.useState([]);
@@ -21,68 +21,20 @@ export const VistaFichaMedicaSuperUser = () => {
   const [genero, setGenero] = useState("");
   const fileLinkRef = useRef();
   const toast = useToast();
-
   const [isLoading, setIsloading] = useState(!pdfSuperUser ? false : true);
-  const rutaMain = "http://localhost:3003/api/uploads/";
-
+  const rutaMain = "/api/uploads/";
+  // funcion del filtro
   useEffect(() => {
     const handleFiltro = async () => {
-      if (genero === "Masculino" && unidad === "") {
+      if (genero !== "" && unidad === "") {
         return setPdfSuperUser(
           pdfUsers.filter((user) => user.datos.genero === genero)
         );
-      } else if (genero === "Femenino" && unidad === "") {
-        return setPdfSuperUser(
-          pdfUsers.filter((user) => user.datos.genero === genero)
-        );
-      } else if (genero === "" && unidad === "Manada") {
+      } else if (genero === "" && unidad !== "") {
         return setPdfSuperUser(
           pdfUsers.filter((user) => user.datos.unidad === unidad)
         );
-      } else if (genero === "" && unidad === "Tropa") {
-        return setPdfSuperUser(
-          pdfUsers.filter((user) => user.datos.unidad === unidad)
-        );
-      } else if (genero === "" && unidad === "Clan") {
-        return setPdfSuperUser(
-          pdfUsers.filter((user) => user.datos.unidad === unidad)
-        );
-      } else if (genero === "Masculino" && unidad === "Clan") {
-        return setPdfSuperUser(
-          pdfUsers.filter(
-            (user) =>
-              user.datos.genero === genero && user.datos.unidad === unidad
-          )
-        );
-      } else if (genero === "Femenino" && unidad === "Clan") {
-        return setPdfSuperUser(
-          pdfUsers.filter(
-            (user) =>
-              user.datos.genero === genero && user.datos.unidad === unidad
-          )
-        );
-      } else if (genero === "Masculino" && unidad === "Tropa") {
-        return setPdfSuperUser(
-          pdfUsers.filter(
-            (user) =>
-              user.datos.genero === genero && user.datos.unidad === unidad
-          )
-        );
-      } else if (genero === "Femenino" && unidad === "Tropa") {
-        return setPdfSuperUser(
-          pdfUsers.filter(
-            (user) =>
-              user.datos.genero === genero && user.datos.unidad === unidad
-          )
-        );
-      } else if (genero === "Masculino" && unidad === "Manada") {
-        return setPdfSuperUser(
-          pdfUsers.filter(
-            (user) =>
-              user.datos.genero === genero && user.datos.unidad === unidad
-          )
-        );
-      } else if (genero === "Femenino" && unidad === "Manada") {
+      } else if (genero !== "" && unidad !== "") {
         return setPdfSuperUser(
           pdfUsers.filter(
             (user) =>
@@ -96,7 +48,7 @@ export const VistaFichaMedicaSuperUser = () => {
 
     handleFiltro();
   }, [genero, pdfUsers, unidad]);
-
+  // funcion obetener todos los pdf
   const handleGetPdf = async () => {
     const { data } = await axios.get("/api/pdffiles");
 
@@ -119,7 +71,7 @@ export const VistaFichaMedicaSuperUser = () => {
   useEffect(() => {
     handleGetPdf();
   }, [setPdfUsers]);
-
+  // funcion borrar pdf
   const handleDeletePdf = async (pdf) => {
     try {
       setPdfSuperUser(pdfUsers.filter((ficha) => ficha.id != pdf.id));

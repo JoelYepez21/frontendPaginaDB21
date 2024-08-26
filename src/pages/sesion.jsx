@@ -1,7 +1,7 @@
 import { Flex, useColorModeValue } from "@chakra-ui/react";
-import SidebarWithHeader from "../components/NavBarSesion";
+import SidebarWithHeader from "../components/navbars/NavBarSesion";
 import FormSesion from "../components/FromSesion";
-import VistaUsuarios from "../components/VistaUsuarios";
+import VistaUsuarios from "../components/componentesSuperUser/VistaUsuarios";
 import { useAuth } from "../hooks/useAuth";
 
 export const Sesion = () => {

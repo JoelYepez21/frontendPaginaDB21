@@ -1,9 +1,9 @@
 import { CircularProgress, Flex, useColorModeValue } from "@chakra-ui/react";
-import FormIcon from "./FromIcon";
-import Formulario from "./Formulario";
+import FormIcon from "./formularios/formulariosDeDatosUser/FromIcon";
+import Formulario from "./formularios/formulariosDeDatosUser/Formulario";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import FormularioEditable from "./FormularioEditable";
+import FormularioEditable from "./formularios/formulariosDeDatosUser/FormularioEditable";
 
 export const FormSesion = () => {
   const [datos, setDatos] = useState("");

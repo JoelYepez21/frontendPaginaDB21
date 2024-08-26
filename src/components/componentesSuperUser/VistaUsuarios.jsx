@@ -12,12 +12,12 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import logo from "../images/logo.png";
+import logo from "../../images/logo.png";
 import { CloseIcon, ViewIcon } from "@chakra-ui/icons";
 import AlertDialogueDelete from "./AlertDeleteUser";
-import ModalUser from "./Modal";
+import ModalUser from "../modales/superUser/Modal";
 import { FiTrash2 } from "react-icons/fi";
-
+// vista de usuarios para el admi
 export const VistaUsuarios = () => {
   const [usuarios, setUsuarios] = React.useState([]);
   const [users, setUsers] = React.useState([]);
@@ -26,66 +26,19 @@ export const VistaUsuarios = () => {
   const [genero, setGenero] = useState("");
   const [isLoading, setIsloading] = useState(!users ? false : true);
   const toast = useToast();
-  const rutaMain = "http://localhost:3003/api/imagenPerfil/";
-
+  const rutaMain = "/api/imagenPerfil/";
+  // funcion para el filtro
   useEffect(() => {
     const handleFiltro = async () => {
-      if (genero === "Masculino" && unidad === "") {
+      if (genero !== "" && unidad === "") {
         return setUsuarios(
           users.filter((user) => user.datos.genero === genero)
         );
-      } else if (genero === "Femenino" && unidad === "") {
-        return setUsuarios(
-          users.filter((user) => user.datos.genero === genero)
-        );
-      } else if (genero === "" && unidad === "Manada") {
+      } else if (genero === "" && unidad !== "") {
         return setUsuarios(
           users.filter((user) => user.datos.unidad === unidad)
         );
-      } else if (genero === "" && unidad === "Tropa") {
-        return setUsuarios(
-          users.filter((user) => user.datos.unidad === unidad)
-        );
-      } else if (genero === "" && unidad === "Clan") {
-        return setUsuarios(
-          users.filter((user) => user.datos.unidad === unidad)
-        );
-      } else if (genero === "Masculino" && unidad === "Clan") {
-        return setUsuarios(
-          users.filter(
-            (user) =>
-              user.datos.genero === genero && user.datos.unidad === unidad
-          )
-        );
-      } else if (genero === "Femenino" && unidad === "Clan") {
-        return setUsuarios(
-          users.filter(
-            (user) =>
-              user.datos.genero === genero && user.datos.unidad === unidad
-          )
-        );
-      } else if (genero === "Masculino" && unidad === "Tropa") {
-        return setUsuarios(
-          users.filter(
-            (user) =>
-              user.datos.genero === genero && user.datos.unidad === unidad
-          )
-        );
-      } else if (genero === "Femenino" && unidad === "Tropa") {
-        return setUsuarios(
-          users.filter(
-            (user) =>
-              user.datos.genero === genero && user.datos.unidad === unidad
-          )
-        );
-      } else if (genero === "Masculino" && unidad === "Manada") {
-        return setUsuarios(
-          users.filter(
-            (user) =>
-              user.datos.genero === genero && user.datos.unidad === unidad
-          )
-        );
-      } else if (genero === "Femenino" && unidad === "Manada") {
+      } else if (genero !== "" && unidad !== "") {
         return setUsuarios(
           users.filter(
             (user) =>
@@ -99,7 +52,7 @@ export const VistaUsuarios = () => {
 
     handleFiltro();
   }, [genero, setUsuarios, unidad, users, usuarios]);
-
+  // funcion para obtener los usuarios
   const handleGetUsuarios = async () => {
     const { data } = await axios.get("/api/datos");
     setUsers(
@@ -118,11 +71,10 @@ export const VistaUsuarios = () => {
     setDatos(data.datos);
     setIsloading(false);
   };
-
   useEffect(() => {
     handleGetUsuarios();
   }, [setUsers]);
-
+  // funcion para eliminar los usuarios
   const handleDeleteUser = async (usuarioEsperado) => {
     setUsuarios(usuarios.filter((usuario) => usuarioEsperado.id != usuario.id));
     await axios.delete(`/api/users/${usuarioEsperado.id}`);
@@ -136,7 +88,7 @@ export const VistaUsuarios = () => {
     });
     handleGetUsuarios();
   };
-
+  // funcion para eliminar la imagen de perfil
   const handleDeleteImagen = async (nombre, id) => {
     try {
       await axios.delete(`/api/imagenPerfil/${nombre}/${id}`);

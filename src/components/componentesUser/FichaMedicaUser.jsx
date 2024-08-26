@@ -11,21 +11,20 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import pdf from "../assets/pdf/FichaMedica.pdf";
-import AlertDialogueDelete from "./AlertDeleteUser";
+import pdf from "../../assets/pdf/FichaMedica.pdf";
+import AlertDialogueDelete from "../componentesSuperUser/AlertDeleteUser";
 import { FiTrash2 } from "react-icons/fi";
 
 export const VistaFichaMedicaUser = () => {
-  // const [pdfFile, setPdfFile] = useState(null);
   const [pdfUser, setPdfUser] = useState(null);
   const fileInputRef = useRef();
   const fileLinkRef = useRef();
   const fileLinkRefMain = useRef();
   const fileInputRefPost = useRef();
-  const rutaMain = "http://localhost:3003/api/uploads/";
+  const rutaMain = "/api/uploads/";
   const [isLoading, setIsloading] = useState(pdfUser ? false : true);
   const toast = useToast();
-
+  // funcion para enviar el pdf
   const handleImagen = async (pdfFile) => {
     try {
       const pdf = { pdfFile };
@@ -33,13 +32,12 @@ export const VistaFichaMedicaUser = () => {
 
       // Primero creo el form data
       const bodyFormData = new FormData();
-
+      // agrago el pdf al form data
       for (const key in pdf) {
         bodyFormData.append(key, pdf[key]);
       }
-
-      const response = await axios.post("/api/pdffiles", bodyFormData);
-      console.log(response);
+      //envio el form data
+      await axios.post("/api/pdffiles", bodyFormData);
       handleGetPdf();
       toast({
         title: "Ficha medica agregada",
@@ -61,7 +59,7 @@ export const VistaFichaMedicaUser = () => {
       });
     }
   };
-
+  // funcion para obtener el pdf
   const handleGetPdf = async () => {
     const { data } = await axios.get("/api/pdffiles");
     setPdfUser(data.Pdf[0]);
@@ -71,7 +69,7 @@ export const VistaFichaMedicaUser = () => {
   useEffect(() => {
     handleGetPdf();
   }, [setPdfUser]);
-
+  // funcion para cambiar el pdf
   const handleChangeFile = async (pdfFile) => {
     try {
       const pdf = { pdfFile };
@@ -79,11 +77,11 @@ export const VistaFichaMedicaUser = () => {
 
       // Primero creo el form data
       const bodyFormData = new FormData();
-
+      // agrago el pdf al form data
       for (const key in pdf) {
         bodyFormData.append(key, pdf[key]);
       }
-
+      //envio el form data
       await axios.patch(
         `/api/pdffiles/${pdfUser.pdfFile}/${pdfUser.id}`,
         bodyFormData
@@ -110,6 +108,7 @@ export const VistaFichaMedicaUser = () => {
       });
     }
   };
+  // funcion para eliminar el pdf
   const handleDeletePdf = async (pdf) => {
     try {
       console.log(pdf);
@@ -280,5 +279,4 @@ export const VistaFichaMedicaUser = () => {
     </Flex>
   );
 };
-// 1723045745107-prueba.pdf
 export default VistaFichaMedicaUser;

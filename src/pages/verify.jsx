@@ -15,7 +15,7 @@ export const Verify = () => {
       console.log(showError);
       const id = window.location.pathname.split("/")[2];
       const token = window.location.pathname.split("/")[3];
-      await axios.patch(`http://localhost:3003/api/users/${id}/${token}`);
+      await axios.patch(`/api/users/${id}/${token}`);
       window.location.pathname = "/";
     } catch (error) {
       handleShowError(true);

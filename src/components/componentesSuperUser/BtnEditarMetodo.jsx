@@ -21,13 +21,7 @@ import {
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useState } from "react";
-
-// 1. Create a text input component
-
-// eslint-disable-next-line react/display-name, react-refresh/only-export-components
-
-// 2. Create the form
-// eslint-disable-next-line react-refresh/only-export-components
+// boton para actualizar los metodos de pago
 const Form = ({ metodo, onCancel, getMetodos }) => {
   const toast = useToast();
   const [name, setName] = useState(metodo.name);
@@ -196,8 +190,6 @@ const Form = ({ metodo, onCancel, getMetodos }) => {
   );
 };
 
-// 3. Create the Popover
-// Ensure you set `closeOnBlur` prop to false so it doesn't close on outside click
 const PopoverForm = ({ metodo, getMetodos }) => {
   const { onOpen, onClose, isOpen } = useDisclosure();
 

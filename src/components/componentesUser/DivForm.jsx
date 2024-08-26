@@ -1,5 +1,5 @@
 import { Box, Flex, Image } from "@chakra-ui/react";
-import logo from "../images/Galleta_grupo.png";
+import logo from "../../images/Galleta_grupo.png";
 import FormMain from "./Form";
 export const DivForm = () => {
   return (

@@ -1,5 +1,5 @@
 import { Box, Flex, Image, Text } from "@chakra-ui/react";
-import logo from "../images/logo.png";
+import logo from "../../images/logo.png";
 
 export const LogoNav = () => {
   return (

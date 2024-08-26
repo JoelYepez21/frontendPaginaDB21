@@ -1,7 +1,7 @@
-import DivForm from "../components/DivForm";
+import DivForm from "../components/componentesUser/DivForm";
 import SmallWithLogoLeft from "../components/Footer";
 import InfoDiv from "../components/InfoDiv";
-import NavBar from "../components/NavBar";
+import NavBar from "../components/navbars/NavBar";
 import { Flex, useColorModeValue } from "@chakra-ui/react";
 
 export const Home = () => {

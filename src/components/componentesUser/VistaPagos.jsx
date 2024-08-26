@@ -5,7 +5,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import ModalPagos from "./ModalPagos";
+import ModalPagos from "../modales/user/ModalPagos";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -27,13 +27,6 @@ export const VistaPagos = () => {
   if (isLoading) {
     return (
       <Flex w="100%" minH="60vh" alignItems="center" justifyContent="center">
-        {/* <Spinner
-          thickness="4px"
-          speed="0.65s"
-          emptyColor="gray.200"
-          color="blue.500"
-          size="xl"
-        /> */}
         <CircularProgress
           isIndeterminate
           color="yellow.300"

@@ -1,4 +1,9 @@
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Box,
   CircularProgress,
   Collapse,
@@ -10,22 +15,25 @@ import {
   useToast,
 } from "@chakra-ui/react";
 
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
 import SeccionInfo from "./SeccionInfo";
-import { FiDollarSign, FiPlusCircle, FiUser } from "react-icons/fi";
-// import VistaListaHome from "./VistaListaHome";
+import { FiDollarSign, FiPlusCircle, FiTrash2, FiUser } from "react-icons/fi";
+import AlertDialogueDelete from "./AlertDeleteUser";
+import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 
+// vista de inicio para el admi
 export const VistaHomeSuperUser = () => {
   const { auth } = useAuth();
+  const toast = useToast();
   const [isLoading, setIsloading] = useState(auth ? false : true);
   const [show, setShow] = useState(true);
   const [usuarios, setUsuarios] = React.useState([]);
   const [pagos, setPagos] = React.useState([]);
   const [fichas, setFichas] = React.useState([]);
-
+  // funcion para obtener los usuarios en orden alfabetico
   const handleGetUsuarios = async () => {
     const { data } = await axios.get("/api/users");
     setUsuarios(
@@ -47,7 +55,7 @@ export const VistaHomeSuperUser = () => {
   useEffect(() => {
     handleGetUsuarios();
   }, [setUsuarios]);
-
+  // funcion para obtener los pagos
   const handleGetPago = async () => {
     const { data } = await axios.get("/api/pagos");
     setPagos(data);
@@ -57,7 +65,7 @@ export const VistaHomeSuperUser = () => {
   useEffect(() => {
     handleGetPago();
   }, [setPagos]);
-
+  // funcion para obtener las fichas medicas
   const handleGetFichas = async () => {
     const { data } = await axios.get("/api/pdffiles");
     setFichas(data.Pdf);
@@ -66,7 +74,7 @@ export const VistaHomeSuperUser = () => {
   useEffect(() => {
     handleGetFichas();
   }, [setFichas]);
-
+  // oculta el bienvenido despues de 2s
   useEffect(() => {
     const changeShow = () => {
       setTimeout(() => {
@@ -75,6 +83,19 @@ export const VistaHomeSuperUser = () => {
     };
     changeShow();
   });
+  // funcion para eliminar un usuario
+  const handleDeleteUser = async (usuarioEsperado) => {
+    setUsuarios(usuarios.filter((usuario) => usuario.id != usuarioEsperado.id));
+    await axios.delete(`/api/users/${usuarioEsperado.id}`);
+    toast({
+      title: "Advertencia",
+      description: "Usuario Eliminado",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+      position: "top",
+    });
+  };
 
   return (
     <Flex direction="column" gap="4">
@@ -102,12 +123,7 @@ export const VistaHomeSuperUser = () => {
               mb={0}
             />
           </Collapse>
-          <Flex
-            gap="4"
-            flexDirection="column"
-            justifyContent="space-around"
-            // bg={"black"}
-          >
+          <Flex gap="4" flexDirection="column" justifyContent="space-around">
             <Flex
               direction={{ base: "column", lg: "row" }}
               gap="4"
@@ -250,11 +266,95 @@ export const VistaHomeSuperUser = () => {
                 description={" Rovers"}
               />
             </Flex>
-            {/* <VistaListaHome
-              usuarios={usuarios}
-              handleGetUsuairos={handleGetUsuarios}
-              setUsuarios={setUsuarios}
-            /> */}
+            <Flex p={"4"} w={"100%"} direction={"column"} gap={"4"}>
+              <Accordion allowMultiple>
+                <AccordionItem>
+                  <h2>
+                    <AccordionButton>
+                      <Box as="span" flex="1" textAlign="left">
+                        Vista Rapida
+                      </Box>
+                      <AccordionIcon />
+                    </AccordionButton>
+                  </h2>
+                  <AccordionPanel
+                    pb={4}
+                    maxH="32vh"
+                    overflow="scroll"
+                    sx={{
+                      "::-webkit-scrollbar": {
+                        display: "none",
+                      },
+                    }}
+                  >
+                    {usuarios.length === 0 ? (
+                      <Flex w={"100%"} justifyContent={"center"}>
+                        <Text>No hay ningun usuario </Text>
+                      </Flex>
+                    ) : (
+                      <>
+                        <Flex alignItems={"center"} p={"1"}>
+                          <Flex w={"100%"} justifyContent={"center"} p={"1"}>
+                            <Text>Nombre</Text>
+                          </Flex>
+                          <Flex w={"100%"} justifyContent={"center"} p={"1"}>
+                            <Text>Datos</Text>
+                          </Flex>
+                          <Flex w={"100%"} justifyContent={"center"} p={"1"}>
+                            <Text>Eliminar</Text>
+                          </Flex>
+                        </Flex>
+                        {usuarios.map((usuario) => (
+                          <Flex
+                            key={usuario.name}
+                            alignItems={"center"}
+                            p={"1"}
+                          >
+                            <Flex
+                              w={"100%"}
+                              bg={usuario.datos ? "green.700" : "gray.500"}
+                              rounded={"lg"}
+                            >
+                              <Flex
+                                w={"100%"}
+                                justifyContent={"center"}
+                                alignItems={"center"}
+                                p={"1"}
+                              >
+                                <Text>{usuario.name}</Text>
+                              </Flex>
+                              <Flex
+                                w={"100%"}
+                                justifyContent={"center"}
+                                alignItems={"center"}
+                                p={"1"}
+                              >
+                                {usuario.datos ? <CheckIcon /> : <CloseIcon />}
+                              </Flex>
+                              <Flex
+                                w={"100%"}
+                                justifyContent={"center"}
+                                alignItems={"center"}
+                                p={"1"}
+                              >
+                                <AlertDialogueDelete
+                                  title="Eliminar usuario"
+                                  text={`¿Estas seguro que deseas eliminar a ${usuario.name}?`}
+                                  textBtn="Eliminar"
+                                  logo={<FiTrash2 />}
+                                  metodo={usuario}
+                                  handleDeleteFunction={handleDeleteUser}
+                                />
+                              </Flex>
+                            </Flex>
+                          </Flex>
+                        ))}
+                      </>
+                    )}
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
+            </Flex>
           </Flex>
         </>
       )}

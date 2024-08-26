@@ -1,7 +1,7 @@
 import { Flex, useColorModeValue } from "@chakra-ui/react";
 import { useState } from "react";
-import FormLogin from "./FormLogin";
-import FormRegistro from "./FormRegistro";
+import FormLogin from "../formularios/formulariosDeInicio/FormLogin";
+import FormRegistro from "../formularios/formulariosDeInicio/FormRegistro";
 
 export const FormMain = () => {
   const [showLogin, setShowLogin] = useState(false);

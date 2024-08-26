@@ -12,7 +12,6 @@ import {
 } from "@chakra-ui/react";
 import { FaFacebook, FaInstagram, FaTiktok } from "react-icons/fa";
 import scouts from "../images/SCOUTS_LOGO.png";
-// import { ReactNode } from "react";
 
 const Logo = () => {
   return <Image maxW="10rem" src={scouts}></Image>;

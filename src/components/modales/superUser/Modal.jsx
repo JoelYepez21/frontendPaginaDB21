@@ -11,7 +11,7 @@ import {
   useDisclosure,
   useToast,
 } from "@chakra-ui/react";
-import AlertDialogueDelete from "./AlertDeleteUser";
+import AlertDialogueDelete from "../../componentesSuperUser/AlertDeleteUser";
 import React from "react";
 import axios from "axios";
 

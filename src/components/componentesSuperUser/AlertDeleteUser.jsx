@@ -9,7 +9,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
-
+// componente para hacer las acciones de borrar o confirmar
 const AlertDialogueDelete = ({
   handleDeleteFunction,
   title,
@@ -21,6 +21,7 @@ const AlertDialogueDelete = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
   const [color, setColor] = useState("");
+
   const handleDelete = async () => {
     if (metodo) {
       await handleDeleteFunction(metodo);
@@ -30,15 +31,14 @@ const AlertDialogueDelete = ({
       onClose();
     }
   };
+
   useEffect(() => {
     const renderSwitch = async (key) => {
       switch (key) {
         case "Confirmar":
-          // setPagos(data);
           return setColor("green");
 
         case "Desconfirmar":
-          // setPagos(data);
           return setColor("yellow");
 
         default:

@@ -5,46 +5,50 @@ import {
   FormLabel,
   Input,
   Select,
+  Text,
+  useBoolean,
   useToast,
 } from "@chakra-ui/react";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../../hooks/useAuth";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export const Formulario = ({ hanldeGetDatos }) => {
+export const FormularioEditable = ({ datos, hanldeGetDatos }) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const REGEX_NUMBER = /^[0](212|412|414|424|416|426)[0-9]{7}$/;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const REGEX_NAME = /^[A-Z][a-z]*[ ][A-Z][a-z]*[ ][A-Z][a-z]*[ ][A-Z][a-z]*$/;
   const { auth } = useAuth();
   const toast = useToast();
-  // const [editable, setEditable] = useBoolean();
+  const [editable, setEditable] = useBoolean();
   // const [datos, setDatos] = useState("");
 
-  const [cedula, setCedula] = useState("");
+  const [cedula, setCedula] = useState(datos.cedula);
   const [cedulaValidation, setCedulaValidation] = useState(false);
 
-  const [nombres, setNombres] = useState("");
+  const [nombres, setNombres] = useState(datos.nombres);
   const [nombresValidation, setNombresValidation] = useState(false);
 
-  const [genero, setGenero] = useState("");
+  const [genero, setGenero] = useState(datos.genero);
   const [generoValidation, setGeneroValidation] = useState(false);
 
-  const [fecha, setFecha] = useState("");
-  const [edad, setEdad] = useState("");
+  const [fecha, setFecha] = useState(datos.fechaNacimiento);
+  const [edad, setEdad] = useState(datos.edad);
   const [fechaValidation, setFechaValidation] = useState(false);
 
-  const [telefonoPersonal, setTelefonoPersonal] = useState("");
+  const [telefonoPersonal, setTelefonoPersonal] = useState(
+    datos.telefonoPersonal
+  );
   const [telefonoPersonalValidation, setTelefonoPersonalValidation] =
     useState(false);
 
-  const [telefonoLocal, setTelefonoLocal] = useState("");
+  const [telefonoLocal, setTelefonoLocal] = useState(datos.telefonoLocal);
   const [telefonoLocalValidation, setTelefonoLocalValidation] = useState(false);
 
-  const [unidad, setUnidad] = useState("");
+  const [unidad, setUnidad] = useState(datos.unidad);
   const [unidadValidation, setUnidadValidation] = useState(false);
 
-  const [direccion, setDireccion] = useState("");
+  const [direccion, setDireccion] = useState(datos.direccion);
   // const [direccionValidation, setDireccionValidation] = useState(false);
 
   useEffect(() => {
@@ -129,6 +133,7 @@ export const Formulario = ({ hanldeGetDatos }) => {
     }
     calcularEdad(fecha);
   }, [fecha, edad]);
+
   useEffect(() => {
     setTelefonoPersonalValidation(REGEX_NUMBER.test(telefonoPersonal));
   }, [REGEX_NUMBER, telefonoPersonal]);
@@ -145,9 +150,14 @@ export const Formulario = ({ hanldeGetDatos }) => {
     }
   }, [unidad]);
 
-  const handleDatos = async () => {
+  const handleEditDatos = async () => {
+    await hanldeGetDatos();
+    setEditable.toggle();
+  };
+
+  const handleUpdateDatos = async () => {
     try {
-      const { data } = await axios.post("/api/datos", {
+      await axios.patch(`/api/datos/${datos.id}`, {
         cedula,
         nombres,
         genero,
@@ -158,16 +168,15 @@ export const Formulario = ({ hanldeGetDatos }) => {
         unidad,
         direccion,
       });
-      await axios.patch(`/api/users/${auth.id}`, { registrado: true });
       toast({
-        title: "Datos Enviados",
-        description: data.message,
+        title: "Usuario Creado",
+        description: "Los datos han sido actualizados",
         status: "success",
         duration: 3000,
         isClosable: true,
         position: "top",
       });
-      hanldeGetDatos();
+      setEditable.toggle();
     } catch (error) {
       console.log(error);
       toast({
@@ -185,124 +194,177 @@ export const Formulario = ({ hanldeGetDatos }) => {
     <>
       <FormControl w="18rem" isInvalid={!cedulaValidation && cedula}>
         <FormLabel>Numero de cedula</FormLabel>
-
-        <Input
-          type="number"
-          border="solid 1px"
-          value={cedula}
-          onChange={({ target }) => setCedula(target.value)}
-        />
-
-        {/* <Input
-          type="number"
-          border="solid 1px"
-          value={auth.registrado ? datos.cedula : cedula}
-          onChange={({ target }) => setCedula(target.value)}
-          isDisabled={auth.registrado}
-        /> */}
+        {!editable ? (
+          <Text p="2" pl="3">
+            {cedula}
+          </Text>
+        ) : (
+          <Input
+            type="number"
+            border="solid 1px"
+            value={cedula}
+            onChange={({ target }) => setCedula(target.value)}
+          />
+        )}
       </FormControl>
       <FormControl w="18rem" isInvalid={!nombresValidation && nombres}>
         <FormLabel>Nombres y Apellidos</FormLabel>
-
-        <Input
-          type="text"
-          border="solid 1px"
-          value={nombres}
-          onChange={({ target }) => setNombres(target.value)}
-        />
+        {!editable ? (
+          <Text p="2" pl="3">
+            {nombres}
+          </Text>
+        ) : (
+          <Input
+            type="text"
+            border="solid 1px"
+            value={nombres}
+            onChange={({ target }) => setNombres(target.value)}
+          />
+        )}
       </FormControl>
       <FormControl w="18rem" isInvalid={!generoValidation && genero}>
         <FormLabel>Genero</FormLabel>
-
-        <Select
-          value={genero}
-          border="solid 1px"
-          onChange={({ target }) => setGenero(target.value)}
-        >
-          <option value="default">Seleccione un genero</option>
-          <option value="Masculino">Masculino</option>
-          <option value="Femenino">Femenino</option>
-        </Select>
+        {!editable ? (
+          <Text p="2" pl="3">
+            {genero}
+          </Text>
+        ) : (
+          <Select
+            value={genero}
+            border="solid 1px"
+            onChange={({ target }) => setGenero(target.value)}
+          >
+            <option value="default">Seleccione un genero</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Femenino">Femenino</option>
+          </Select>
+        )}
       </FormControl>
       <FormControl w="18rem" isInvalid={!fechaValidation && fecha}>
         <FormLabel>Fecha de Nacimiento</FormLabel>
-
-        <Input
-          w="18rem"
-          type="date"
-          border="solid 1px"
-          value={fecha}
-          onChange={({ target }) => setFecha(target.value)}
-        />
+        {!editable ? (
+          <Text p="2" pl="3">
+            {fecha}
+          </Text>
+        ) : (
+          <Input
+            w="18rem"
+            type="date"
+            border="solid 1px"
+            value={fecha}
+            onChange={({ target }) => setFecha(target.value)}
+          />
+        )}
       </FormControl>
       <FormControl
         w="18rem"
         isInvalid={!telefonoPersonalValidation && telefonoPersonal}
       >
         <FormLabel>Telefono Personal</FormLabel>
-
-        <Input
-          w="18rem"
-          type="number"
-          border="solid 1px"
-          value={telefonoPersonal}
-          onChange={({ target }) => setTelefonoPersonal(target.value)}
-        />
+        {!editable ? (
+          <Text p="2" pl="3">
+            {telefonoPersonal}
+          </Text>
+        ) : (
+          <Input
+            w="18rem"
+            type="number"
+            border="solid 1px"
+            value={telefonoPersonal}
+            onChange={({ target }) => setTelefonoPersonal(target.value)}
+          />
+        )}
       </FormControl>
       <FormControl
         w="18rem"
         isInvalid={!telefonoLocalValidation && telefonoLocal}
       >
         <FormLabel>Telefono Local</FormLabel>
-        <Input
-          w="18rem"
-          type="number"
-          border="solid 1px"
-          value={telefonoLocal}
-          onChange={({ target }) => setTelefonoLocal(target.value)}
-        />
+        {!editable ? (
+          <Text p="2" pl="3">
+            {telefonoLocal}
+          </Text>
+        ) : (
+          <Input
+            w="18rem"
+            type="number"
+            border="solid 1px"
+            value={telefonoLocal}
+            onChange={({ target }) => setTelefonoLocal(target.value)}
+          />
+        )}
       </FormControl>
       <FormControl w="18rem">
         <FormLabel>Correo Electronico</FormLabel>
-        <Input w="18rem" border="solid 1px" value={auth.email} disabled />
+        {!editable ? (
+          <Text p="2" pl="3">
+            {auth.email}
+          </Text>
+        ) : (
+          <Input w="18rem" border="solid 1px" value={auth.email} disabled />
+        )}
       </FormControl>
       <FormControl w="18rem" isInvalid={!unidadValidation && unidad}>
         <FormLabel>Unidad</FormLabel>
-
-        <Select
-          value={unidad}
-          border="solid 1px"
-          onChange={({ target }) => setUnidad(target.value)}
-        >
-          <option value="unidad">Selecciona tu unidad</option>
-          <option value="Manada">Manada</option>
-          <option value="Tropa">Tropa</option>
-          <option value="Clan">Clan</option>
-        </Select>
+        {!editable ? (
+          <Text p="2" pl="3">
+            {unidad}
+          </Text>
+        ) : (
+          <Select
+            value={unidad}
+            border="solid 1px"
+            onChange={({ target }) => setUnidad(target.value)}
+          >
+            <option value="unidad">Selecciona tu unidad</option>
+            <option value="Manada">Manada</option>
+            <option value="Tropa">Tropa</option>
+            <option value="Clan">Clan</option>
+          </Select>
+        )}
       </FormControl>
       <FormControl w="18rem">
         <FormLabel>Direccion</FormLabel>
-
-        <Input
-          w="18rem"
-          placeholder="Direccion de habitacion"
-          value={direccion}
-          border="solid 1px"
-          onChange={({ target }) => setDireccion(target.value)}
-        />
+        {!editable ? (
+          <Text p="2" pl="3">
+            {direccion}
+          </Text>
+        ) : (
+          <Input
+            w="18rem"
+            placeholder="Direccion de habitacion"
+            value={direccion}
+            border="solid 1px"
+            onChange={({ target }) => setDireccion(target.value)}
+          />
+        )}
       </FormControl>
-      <ButtonGroup
-        w="18rem"
-        display="flex"
-        alignItems="end"
-        justifyContent="center"
-      >
-        <Button onClick={handleDatos} colorScheme="green">
-          Guardar datos
-        </Button>
-      </ButtonGroup>
+
+      {editable ? (
+        <ButtonGroup
+          w="18rem"
+          display="flex"
+          alignItems="end"
+          justifyContent="center"
+        >
+          <Button onClick={handleUpdateDatos} colorScheme="green">
+            Actualizar datos
+          </Button>
+        </ButtonGroup>
+      ) : (
+        <ButtonGroup
+          w="18rem"
+          display="flex"
+          alignItems="end"
+          justifyContent="center"
+        >
+          <Button onClick={handleEditDatos} colorScheme="blue">
+            Editar datos
+          </Button>
+        </ButtonGroup>
+      )}
     </>
   );
 };
 
-export default Formulario;
+export default FormularioEditable;

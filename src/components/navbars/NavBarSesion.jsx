@@ -1,5 +1,5 @@
 "use client";
-import logo from "../images/logo.png";
+import logo from "../../images/logo.png";
 import {
   IconButton,
   Avatar,
@@ -32,13 +32,9 @@ import {
   FiTrello,
 } from "react-icons/fi";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 import { Link, Link as ReactRouterLink, useNavigate } from "react-router-dom";
 import axios from "axios";
-// import { Navigate } from "react-router";
-// import { useNavigate } from "react-router";
-
-// import { IconType } from 'react-icons'
 
 const SidebarContent = ({ onClose, ...rest }) => {
   const { auth } = useAuth();
